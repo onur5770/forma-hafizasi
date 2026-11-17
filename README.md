@@ -2,6 +2,8 @@
 
 Futbol bilgi oyunu (3-2-1 tarzı). Ekranda iki takım çıkar; ikisinde de forma giymiş ortak bir oyuncuyu bulmaya çalışırsın.
 
+**Canlı: https://onurocal.online/**
+
 ## Modlar
 - **Tek kişilik:** Rastgele iki takım, ortak oyuncuyu tahmin et. Bilemezsen pas geç.
 - **Düello (`/duello`):** Arkadaşınla ya da hızlı eşleşmeyle oyna. Sırayla birer takım seçilir, ikiniz de ortak oyuncuyu bulmaya çalışırsınız; önce bilen puanı alır. Klasik mod: 5 round, 30 sn takım seçimi, 30 sn tahmin.
