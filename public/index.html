@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forma Hafızası</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pitch-night: #0a2418; --pitch-night-2: #0f3120;
+    --card-surface: #123a26; --card-surface-2: #16452e;
+    --turf: #4ade80; --floodlight: #f4f7f2; --floodlight-dim: #b9c9bd;
+    --amber: #f2b705; --red-card: #e4572e;
+    --line: rgba(244,247,242,0.12); --line-strong: rgba(244,247,242,0.22);
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; min-height:100vh;
+    background: repeating-linear-gradient(90deg, var(--pitch-night) 0 64px, var(--pitch-night-2) 64px 128px);
+    color: var(--floodlight); font-family:'Inter',sans-serif;
+  }
+  body{ display:flex; justify-content:center; padding:32px 16px 60px; }
+  .wrap{ width:100%; max-width:460px; }
+  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding:0 4px; }
+  .eyebrow{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--floodlight-dim); font-weight:600; }
+  .streak-box{ display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.28); border:1px solid var(--line); border-radius:8px; padding:6px 10px; }
+  .streak-label{ font-size:10px; letter-spacing:.1em; color:var(--floodlight-dim); text-transform:uppercase; }
+  .streak-value{ font-family:'Space Mono',monospace; font-weight:700; font-size:16px; color:var(--amber); min-width:18px; text-align:center; }
+  .board{ background: linear-gradient(180deg, var(--card-surface), var(--card-surface-2)); border:1px solid var(--line-strong); border-radius:18px; padding:28px 22px 24px; box-shadow: 0 24px 60px -20px rgba(0,0,0,0.7); }
+  .matchup{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px; padding:8px 0 20px; min-height:84px; }
+  .team-name{ font-family:'Teko',sans-serif; font-weight:600; font-size:clamp(22px,6vw,30px); line-height:1.05; text-transform:uppercase; }
+  .team-name.left{ text-align:right; } .team-name.right{ text-align:left; }
+  .team-name.loading{ color:var(--floodlight-dim); font-size:16px; font-family:'Inter',sans-serif; text-transform:none; }
+  .vs-badge{ width:44px; height:44px; border-radius:50%; background: radial-gradient(circle at 35% 30%, var(--amber), #c98f00 70%); display:flex; align-items:center; justify-content:center; font-family:'Teko',sans-serif; font-weight:700; font-size:16px; color:#241900; flex-shrink:0; }
+  .divider{ height:1px; background:var(--line); margin:4px 0 20px; }
+  .prompt{ font-size:13px; color:var(--floodlight-dim); text-align:center; margin-bottom:14px; }
+  .search-box{ position:relative; }
+  .input-shell{ display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.3); border:1.5px solid var(--line-strong); border-radius:10px; padding:4px 4px 4px 14px; }
+  .input-shell:focus-within{ border-color:var(--turf); box-shadow:0 0 0 3px rgba(74,222,128,0.15); }
+  #player-search{ flex:1; min-width:0; background:transparent; border:none; outline:none; color:var(--floodlight); font-size:16px; padding:12px 10px 12px 0; }
+  #player-search:disabled{ opacity:.5; }
+  .autocomplete-results{ position:absolute; top:calc(100% + 8px); left:0; right:0; background:#0e2e1e; border:1px solid var(--line-strong); border-radius:10px; max-height:220px; overflow-y:auto; list-style:none; margin:0; padding:6px; display:none; z-index:20; }
+  .autocomplete-results li{ padding:11px 12px; border-radius:7px; cursor:pointer; font-size:15px; }
+  .autocomplete-results li:hover{ background:rgba(74,222,128,0.12); }
+  .reveal{ margin-top:20px; min-height:92px; display:flex; align-items:center; justify-content:center; }
+  .reveal-empty{ font-size:13px; color:rgba(244,247,242,0.25); }
+  .goal-flash{ text-align:center; animation: goal-pop .45s cubic-bezier(.2,1.4,.4,1); }
+  .goal-flash .headline{ font-family:'Teko',sans-serif; font-weight:700; font-size:44px; color:var(--turf); text-transform:uppercase; text-shadow:0 0 24px rgba(74,222,128,0.5); }
+  .goal-flash .sub{ font-size:13px; color:var(--floodlight-dim); margin-top:4px; }
+  .card-flash{ text-align:center; animation: card-drop .5s cubic-bezier(.2,1.1,.3,1); }
+  .red-rect{ width:34px; height:48px; margin:0 auto 10px; background: linear-gradient(155deg, var(--red-card), #b5391b); border-radius:4px; }
+  .card-flash .headline{ font-family:'Teko',sans-serif; font-weight:700; font-size:28px; color:var(--red-card); text-transform:uppercase; }
+  .card-flash .sub{ font-size:13px; color:var(--floodlight-dim); margin-top:6px; line-height:1.5; }
+  .card-flash .sub b{ color:var(--floodlight); font-weight:600; }
+  @keyframes goal-pop{ 0%{ transform:scale(.5); opacity:0; } 60%{ transform:scale(1.08); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes card-drop{ 0%{ transform:translateY(-14px) rotate(-6deg); opacity:0; } 100%{ transform:translateY(0) rotate(0deg); opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ .goal-flash,.card-flash{ animation:none; } }
+  .next-btn{ width:100%; margin-top:18px; padding:14px; border:none; border-radius:10px; background:var(--turf); color:#06210f; font-weight:700; font-size:15px; cursor:pointer; display:none; }
+  .next-btn:hover{ background:#6cec9b; }
+  .pass-btn{ width:100%; margin-top:10px; padding:11px; border:1.5px solid var(--line-strong); border-radius:10px; background:transparent; color:var(--floodlight-dim); font-weight:600; font-size:13px; cursor:pointer; }
+  .pass-btn:hover{ border-color:var(--turf); color:var(--turf); }
+  .league-bar{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .league-chip{ padding:6px 12px; border-radius:20px; border:1.5px solid var(--line-strong); background:rgba(0,0,0,0.2); color:var(--floodlight-dim); font-size:12px; font-weight:600; cursor:pointer; user-select:none; }
+  .league-chip.active{ background:var(--turf); border-color:var(--turf); color:#06210f; }
+  .league-note{ font-size:12px; color:var(--red-card); text-align:center; margin:-6px 0 12px; }
+  .difficulty-bar{ display:flex; gap:6px; margin-bottom:14px; }
+  .diff-chip{ flex:1; text-align:center; padding:8px 6px; border-radius:9px; border:1.5px solid var(--line-strong); background:rgba(0,0,0,0.2); color:var(--floodlight-dim); font-size:12px; font-weight:700; cursor:pointer; user-select:none; }
+  .diff-chip.active{ border-color:var(--turf); color:var(--turf); background:rgba(74,222,128,0.12); }
+  .status-line{ text-align:center; font-size:12px; color:rgba(244,247,242,0.3); margin-top:16px; }
+  .duel-link{ display:block; text-align:center; font-size:12px; color:var(--floodlight-dim); margin-top:16px; text-decoration:none; }
+  .duel-link:hover{ color:var(--turf); }
+  .help-btn{
+    width:26px; height:26px; border-radius:50%; border:1px solid var(--line-strong);
+    background:rgba(0,0,0,0.28); color:var(--floodlight-dim); font-family:'Inter',sans-serif;
+    font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; transition: border-color .15s, color .15s;
+  }
+  .help-btn:hover{ border-color:var(--turf); color:var(--turf); }
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:100;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-card{
+    background: linear-gradient(180deg, var(--card-surface), var(--card-surface-2));
+    border:1px solid var(--line-strong); border-radius:16px; padding:24px 22px;
+    max-width:420px; width:100%; box-shadow: 0 24px 60px -20px rgba(0,0,0,0.7);
+  }
+  .modal-card h3{ font-family:'Teko',sans-serif; font-weight:600; font-size:24px; text-transform:uppercase; margin:0 0 12px; }
+  .modal-card p{ font-size:14px; line-height:1.6; color:var(--floodlight-dim); margin:0 0 10px; }
+  .modal-card p b{ color:var(--floodlight); }
+  .modal-close-btn{
+    width:100%; margin-top:14px; padding:12px; border:none; border-radius:10px;
+    background:var(--turf); color:#06210f; font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .modal-close-btn:hover{ background:#6cec9b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div class="eyebrow">Forma Hafızası</div>
+      <button class="help-btn" id="help-btn" aria-label="Nasıl oynanır?">?</button>
+    </div>
+    <div class="streak-box"><span class="streak-label">Seri</span><span class="streak-value" id="streak-value">0</span></div>
+  </div>
+  <div class="board">
+    <div class="difficulty-bar" id="difficulty-bar"></div>
+    <div class="league-bar" id="league-bar"></div>
+    <div class="matchup" id="matchup"><div class="team-name loading" style="grid-column:1/-1; text-align:center;">Veriler yükleniyor…</div></div>
+    <div class="divider"></div>
+    <div class="prompt">Bu iki takımda da forma giyen oyuncuyu bul</div>
+    <div class="search-box">
+      <div class="input-shell"><input type="text" id="player-search" placeholder="Oyuncu adını yaz…" autocomplete="off" disabled></div>
+      <ul class="autocomplete-results" id="results-list"></ul>
+    </div>
+    <button id="pass-btn" class="pass-btn" onclick="loadGame()">Pas Geç →</button>
+    <div class="reveal" id="reveal"><div class="reveal-empty">Cevabını seç, sonucu burada gör</div></div>
+    <button id="next-btn" class="next-btn" onclick="loadGame()">Sonraki Maç →</button>
+  </div>
+  <div class="status-line" id="status-line"></div>
+  <a href="duel.html" class="duel-link">Bir arkadaşınla düello yapmak ister misin? →</a>
+</div>
+
+<div class="modal-overlay" id="help-modal">
+  <div class="modal-card">
+    <h3>Nasıl Oynanır?</h3>
+    <p>Ekranda iki takım gösterilir. Senin görevin, <b>ikisinde de forma giymiş</b> bir oyuncuyu bulup yazmak. Doğru bilirsen <b>GOL!</b>, yanlış bilirsen <b>Kırmızı Kart</b> görürsün — üst üste doğru bilme sayın "Seri" olarak tutulur.</p>
+    <p>Bir arkadaşınla karşılıklı oynamak istersen sayfanın altındaki düello linkine tıklayabilirsin.</p>
+    <p style="font-size:12px; opacity:.85;">Veriler Transfermarkt (Kaggle açık veri seti) kaynaklıdır. Bazı kısa süreli/kiralık transferler kaynak veride eksik olabilir — "doğru cevap"ı bilip de sistem kabul etmezse muhtemelen bu yüzdendir.</p>
+    <button class="modal-close-btn" id="help-close-btn">Anladım</button>
+  </div>
+</div>
+
+<script>
+  // ---- Statik veri (Firestore'a hiç dokunmuyoruz, hepsi Hosting'den bedava geliyor) ----
+  // Veri dosyaları güncellendiğinde tarayıcı/CDN cache'ine takılmamak için versiyon numarası.
+  // Her yeni players.json / team_pairs.json yüklemesinde bu sayıyı 1 artır.
+  const DATA_VERSION = 3;
+  let ALL_PLAYERS = [];   // ["Wesley Sneijder", "Didier Drogba", ...]
+  let TEAM_PAIRS = [];    // [{team1_id, team1_name, team2_id, team2_name, team1_league, team2_league, answers:[...]}, ...]
+  let currentAnswers = []; // şu anki round'un kabul edilen tüm doğru cevapları
+  let ALL_LEAGUES = [];
+  let selectedLeagues = new Set(); // boşsa = "Tümü"
+  const leagueBar = document.getElementById('league-bar');
+  let selectedDifficulty = 'all'; // 'all' | 'easy' | 'medium' | 'hard'
+  const difficultyBar = document.getElementById('difficulty-bar');
+  const DIFFICULTIES = [
+    { key: 'all', label: 'Tümü' },
+    { key: 'easy', label: 'Kolay' },
+    { key: 'medium', label: 'Orta' },
+    { key: 'hard', label: 'Zor' }
+  ];
+  function matchesDifficulty(pair){
+    // Zorluk artık takımların bilinirliğine göre; her çiftin difficulty'si veride hazır geliyor.
+    if (selectedDifficulty === 'all') return true;
+    return pair.difficulty === selectedDifficulty;
+  }
+
+  let streak = 0;
+  const searchInput = document.getElementById('player-search');
+  const resultsList = document.getElementById('results-list');
+  const reveal = document.getElementById('reveal');
+  const nextBtn = document.getElementById('next-btn');
+  const matchup = document.getElementById('matchup');
+  const streakValue = document.getElementById('streak-value');
+  const statusLine = document.getElementById('status-line');
+  let searchTimeout = null;
+
+  function esc(str){ const d = document.createElement('div'); d.innerText = str ?? ''; return d.innerHTML; }
+
+  async function loadData(){
+    const [playersRes, pairsRes] = await Promise.all([
+      fetch('data/players.json?v=' + DATA_VERSION),
+      fetch('data/team_pairs.json?v=' + DATA_VERSION)
+    ]);
+    ALL_PLAYERS = await playersRes.json();
+    TEAM_PAIRS = await pairsRes.json();
+    ALL_LEAGUES = [...new Set(TEAM_PAIRS.flatMap(p => [p.team1_league, p.team2_league]))].sort();
+
+    const saved = localStorage.getItem('formaSelectedLeagues');
+    if (saved){
+      const savedList = saved.split(',').filter(l => ALL_LEAGUES.includes(l));
+      selectedLeagues = new Set(savedList);
+    }
+    const savedDiff = localStorage.getItem('formaDifficulty');
+    if (savedDiff && DIFFICULTIES.some(d => d.key === savedDiff)) selectedDifficulty = savedDiff;
+    renderDifficultyBar();
+    renderLeagueBar();
+  }
+
+  function renderDifficultyBar(){
+    difficultyBar.innerHTML = DIFFICULTIES.map(d =>
+      `<div class="diff-chip ${selectedDifficulty === d.key ? 'active' : ''}" data-diff="${d.key}">${d.label}</div>`
+    ).join('');
+    difficultyBar.querySelectorAll('.diff-chip').forEach(chip => {
+      chip.onclick = () => {
+        selectedDifficulty = chip.dataset.diff;
+        localStorage.setItem('formaDifficulty', selectedDifficulty);
+        renderDifficultyBar();
+        loadGame();
+      };
+    });
+  }
+
+  function renderLeagueBar(){
+    const allActive = selectedLeagues.size === 0;
+    const chips = [`<div class="league-chip ${allActive ? 'active' : ''}" data-league="__all__">Tümü</div>`]
+      .concat(ALL_LEAGUES.map(l => `<div class="league-chip ${selectedLeagues.has(l) ? 'active' : ''}" data-league="${esc(l)}">${esc(l)}</div>`));
+    leagueBar.innerHTML = chips.join('');
+    leagueBar.querySelectorAll('.league-chip').forEach(chip => {
+      chip.onclick = () => {
+        const league = chip.dataset.league;
+        if (league === '__all__') selectedLeagues.clear();
+        else {
+          if (selectedLeagues.has(league)) selectedLeagues.delete(league);
+          else selectedLeagues.add(league);
+        }
+        localStorage.setItem('formaSelectedLeagues', [...selectedLeagues].join(','));
+        renderLeagueBar();
+        loadGame();
+      };
+    });
+  }
+
+  function getFilteredPairs(){
+    let pairs = TEAM_PAIRS;
+    if (selectedLeagues.size > 0) pairs = pairs.filter(p => selectedLeagues.has(p.team1_league) && selectedLeagues.has(p.team2_league));
+    if (selectedDifficulty !== 'all') pairs = pairs.filter(matchesDifficulty);
+    return pairs;
+  }
+
+  function loadGame(){
+    matchup.innerHTML = `<div class="team-name loading" style="grid-column:1/-1; text-align:center;">Maç hazırlanıyor…</div>`;
+    searchInput.value = ""; searchInput.disabled = true;
+    resultsList.style.display = "none";
+    reveal.innerHTML = `<div class="reveal-empty">Cevabını seç, sonucu burada gör</div>`;
+    nextBtn.style.display = "none";
+    document.getElementById('pass-btn').style.display = "block";
+
+    if (TEAM_PAIRS.length === 0){
+      matchup.innerHTML = `<div class="team-name loading" style="grid-column:1/-1; text-align:center;">Yeterli veri yok</div>`;
+      return;
+    }
+
+    const filtered = getFilteredPairs();
+    if (filtered.length === 0){
+      matchup.innerHTML = `<div class="team-name loading" style="grid-column:1/-1; text-align:center;">Bu filtrelerle eşleşme yok</div>`;
+      return;
+    }
+
+    const pair = filtered[Math.floor(Math.random() * filtered.length)];
+    currentAnswers = pair.answers;
+
+    matchup.innerHTML = `
+      <div class="team-name left">${esc(pair.team1_name)}</div>
+      <div class="vs-badge">VS</div>
+      <div class="team-name right">${esc(pair.team2_name)}</div>
+    `;
+    searchInput.disabled = false;
+    searchInput.focus();
+  }
+
+  searchInput.addEventListener('input', function(){
+    const query = this.value.trim().toLocaleLowerCase('tr');
+    clearTimeout(searchTimeout);
+    resultsList.innerHTML = "";
+    if (query.length < 2){ resultsList.style.display = "none"; return; }
+
+    searchTimeout = setTimeout(() => {
+      // Firestore'da "içerir mi" araması yok ama düz JS'te var — substring filtre
+      const matches = ALL_PLAYERS
+        .filter(name => name.toLocaleLowerCase('tr').includes(query))
+        .slice(0, 10);
+
+      resultsList.innerHTML = "";
+      if (matches.length > 0){
+        matches.forEach(name => {
+          const li = document.createElement('li');
+          li.innerText = name;
+          li.onclick = () => selectPlayer(name);
+          resultsList.appendChild(li);
+        });
+        resultsList.style.display = "block";
+      } else resultsList.style.display = "none";
+    }, 150); // JSON zaten hafızada, debounce'a bu kadar gerek yok ama input akıcı kalsın diye
+  });
+
+  function selectPlayer(selectedName){
+    searchInput.value = selectedName;
+    resultsList.style.display = "none";
+    searchInput.disabled = true;
+
+    const isCorrect = currentAnswers.some(a => a.toLocaleLowerCase('tr') === selectedName.toLocaleLowerCase('tr'));
+
+    if (isCorrect){
+      streak++;
+      streakValue.textContent = streak;
+      const best = Math.max(streak, parseInt(localStorage.getItem('formaBestStreak') || '0', 10));
+      localStorage.setItem('formaBestStreak', best);
+      reveal.innerHTML = `<div class="goal-flash"><div class="headline">GOL!</div><div class="sub">${esc(selectedName)} — doğru cevap</div></div>`;
+    } else {
+      streak = 0;
+      streakValue.textContent = streak;
+      reveal.innerHTML = `
+        <div class="card-flash">
+          <div class="red-rect"></div>
+          <div class="headline">Kırmızı Kart</div>
+          <div class="sub">Doğrusu: <b>${currentAnswers.map(esc).join(', ')}</b></div>
+        </div>`;
+    }
+    document.getElementById('pass-btn').style.display = "none";
+    nextBtn.style.display = "block";
+  }
+
+  document.addEventListener('click', function(e){
+    if (!searchInput.contains(e.target) && !resultsList.contains(e.target)) resultsList.style.display = "none";
+  });
+
+  const helpModal = document.getElementById('help-modal');
+  document.getElementById('help-btn').onclick = () => helpModal.classList.add('open');
+  document.getElementById('help-close-btn').onclick = () => helpModal.classList.remove('open');
+  helpModal.addEventListener('click', (e) => { if (e.target === helpModal) helpModal.classList.remove('open'); });
+
+  (async () => {
+    const best = localStorage.getItem('formaBestStreak');
+    if (best) statusLine.textContent = `En iyi serin: ${best}`;
+
+    if (!localStorage.getItem('formaSeenHelp')){
+      helpModal.classList.add('open');
+      localStorage.setItem('formaSeenHelp', '1');
+    }
+
+    await loadData();
+    loadGame();
+  })();
+</script>
+</body>
+</html>

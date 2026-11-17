@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forma Hafızası — Düello</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pitch-night:#0a2418; --pitch-night-2:#0f3120; --card-surface:#123a26; --card-surface-2:#16452e;
+    --turf:#4ade80; --floodlight:#f4f7f2; --floodlight-dim:#b9c9bd; --amber:#f2b705; --red-card:#e4572e;
+    --line:rgba(244,247,242,0.12); --line-strong:rgba(244,247,242,0.22);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; min-height:100vh; background: repeating-linear-gradient(90deg, var(--pitch-night) 0 64px, var(--pitch-night-2) 64px 128px); color:var(--floodlight); font-family:'Inter',sans-serif; }
+  body{ display:flex; justify-content:center; padding:32px 16px 60px; }
+  .wrap{ width:100%; max-width:460px; }
+  .eyebrow{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--floodlight-dim); font-weight:600; margin-bottom:14px; }
+  .board{ background: linear-gradient(180deg, var(--card-surface), var(--card-surface-2)); border:1px solid var(--line-strong); border-radius:18px; padding:26px 22px; box-shadow: 0 24px 60px -20px rgba(0,0,0,0.7); }
+  h2{ font-family:'Teko',sans-serif; font-weight:600; font-size:26px; text-transform:uppercase; margin:0 0 6px; }
+  p.sub{ font-size:13px; color:var(--floodlight-dim); margin:0 0 20px; line-height:1.5; }
+  .btn{ display:block; width:100%; padding:14px; border:none; border-radius:10px; font-weight:700; font-size:15px; cursor:pointer; background:var(--turf); color:#06210f; margin-top:10px; }
+  .btn:hover{ background:#6cec9b; }
+  .btn.secondary{ background:transparent; border:1.5px solid var(--line-strong); color:var(--floodlight); }
+  .btn:disabled{ opacity:.5; cursor:not-allowed; }
+  .input-shell{ display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.3); border:1.5px solid var(--line-strong); border-radius:10px; padding:4px 4px 4px 14px; margin-bottom:10px; }
+  .input-shell:focus-within{ border-color:var(--turf); box-shadow:0 0 0 3px rgba(74,222,128,0.15); }
+  .input-shell input{ flex:1; min-width:0; background:transparent; border:none; outline:none; color:var(--floodlight); font-size:16px; padding:12px 10px 12px 0; }
+  .search-wrap{ position:relative; }
+  .autocomplete-results{ position:absolute; top:calc(100% + 4px); left:0; right:0; background:#0e2e1e; border:1px solid var(--line-strong); border-radius:10px; max-height:200px; overflow-y:auto; list-style:none; margin:0; padding:6px; display:none; z-index:20; }
+  .autocomplete-results li{ padding:11px 12px; border-radius:7px; cursor:pointer; font-size:15px; }
+  .autocomplete-results li:hover{ background:rgba(74,222,128,0.12); }
+  .room-code{ font-family:'Space Mono',monospace; font-weight:700; font-size:34px; letter-spacing:.15em; text-align:center; color:var(--amber); background:rgba(0,0,0,0.25); border-radius:10px; padding:14px; margin-bottom:16px; }
+  .scoreboard{ display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,0.25); border-radius:10px; padding:10px 16px; margin-bottom:18px; font-family:'Space Mono',monospace; font-size:14px; }
+  .scoreboard .me{ color:var(--turf); font-weight:700; }
+  .scoreboard .round-tag{ color:var(--floodlight-dim); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+  .matchup{ display:flex; align-items:center; justify-content:center; gap:14px; font-family:'Teko',sans-serif; font-weight:600; font-size:26px; text-transform:uppercase; margin-bottom:18px; text-align:center; }
+  .matchup .vs{ color:var(--amber); font-size:16px; flex-shrink:0; }
+  .waiting-msg{ text-align:center; font-size:14px; color:var(--floodlight-dim); padding:24px 0; display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .spinner{ width:22px; height:22px; border-radius:50%; border:3px solid rgba(244,247,242,0.15); border-top-color:var(--turf); animation: spin 0.8s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce){ .spinner{ animation:none; } }
+  .result-flash{ text-align:center; animation: pop .4s cubic-bezier(.2,1.3,.4,1); }
+  @keyframes pop{ 0%{ transform:scale(.6); opacity:0; } 100%{ transform:scale(1); opacity:1; } }
+  .result-flash .headline{ font-family:'Teko',sans-serif; font-weight:700; font-size:36px; text-transform:uppercase; }
+  .result-flash.win .headline{ color:var(--turf); } .result-flash.lose .headline{ color:var(--red-card); }
+  .result-flash .detail{ font-size:13px; color:var(--floodlight-dim); margin-top:6px; line-height:1.5; }
+  .result-flash .detail b{ color:var(--floodlight); }
+  .error-line{ font-size:13px; color:var(--red-card); text-align:center; margin-top:10px; min-height:16px; }
+  .link-back{ display:block; text-align:center; font-size:12px; color:var(--floodlight-dim); margin-top:16px; text-decoration:none; }
+  .link-back:hover{ color:var(--turf); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Forma Hafızası — Düello</div>
+  <div class="board" id="board"><div class="waiting-msg"><div class="spinner"></div>Bağlanılıyor…</div></div>
+  <a href="index.html" class="link-back">← Tek kişilik moda dön</a>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/firebase-init.js"></script>
+
+<script>
+const board = document.getElementById('board');
+let roomCode = sessionStorage.getItem('duelRoomCode') || null;
+let myUid = null;
+let unsubscribe = null;
+let lastRenderedKey = null;
+let TEAM_PAIRS = [];
+let ALL_PLAYERS = [];
+let timerInterval = null;
+
+function stopTimerLoop(){
+  if (timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+}
+
+function startTimerLoop(deadlineMs, onExpire){
+  stopTimerLoop();
+  if (!deadlineMs) return;
+  const tick = () => {
+    const box = document.getElementById('timer-box');
+    const remainingMs = deadlineMs - Date.now();
+    const remaining = Math.max(0, Math.ceil(remainingMs / 1000));
+    if (box) box.textContent = remaining + ' sn';
+    if (remainingMs <= 0){
+      stopTimerLoop();
+      onExpire();
+    }
+  };
+  tick();
+  timerInterval = setInterval(tick, 250);
+}
+
+function esc(str){ const d = document.createElement('div'); d.innerText = str ?? ''; return d.innerHTML; }
+function exitRoom(){
+  if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+  stopMatchmakingListener();
+  stopTimerLoop();
+  sessionStorage.removeItem('duelRoomCode');
+  roomCode = null; lastRenderedKey = null;
+  renderLanding();
+}
+board.addEventListener('click', (e) => { if (e.target && e.target.id === 'exit-btn') exitRoom(); });
+function firstPicker(roundNumber){ return (roundNumber % 2 === 1) ? 1 : 2; }
+function randomRoomCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+function findPair(team1Id, team2Id){
+  return TEAM_PAIRS.find(p =>
+    (p.team1_id === team1Id && p.team2_id === team2Id) ||
+    (p.team1_id === team2Id && p.team2_id === team1Id)
+  );
+}
+
+const ROUND_OPTIONS = [3, 5, 7, 10];
+const TIMER_OPTIONS = [
+  { value: 0, label: 'Süresiz' },
+  { value: 15, label: '15 sn' },
+  { value: 30, label: '30 sn' },
+  { value: 45, label: '45 sn' },
+  { value: 60, label: '60 sn' }
+];
+
+const MATCHMAKING_DOC_ID = 'quick_match_slot';
+const STALE_QUEUE_MS = 20000; // 20 saniyeden eski bekleyen "hayalet" sayılır, üzerine yazılır
+let matchmakingUnsub = null;
+
+function stopMatchmakingListener(){
+  if (matchmakingUnsub){ matchmakingUnsub(); matchmakingUnsub = null; }
+}
+
+function renderQuickMatchSearching(){
+  board.innerHTML = `
+    <h2>Rakip Aranıyor</h2>
+    <div class="waiting-msg"><div class="spinner"></div>Rastgele bir rakip aranıyor…</div>
+    <p class="sub" style="text-align:center;">Klasik: 5 round, takım seçmek için 30 sn, tahmin için 30 sn</p>
+    <button class="btn secondary" id="cancel-match-btn">Vazgeç</button>`;
+  document.getElementById('cancel-match-btn').onclick = cancelQuickMatch;
+}
+
+async function quickMatch(){
+  renderQuickMatchSearching();
+  const slotRef = db.collection('matchmaking').doc(MATCHMAKING_DOC_ID);
+  let matchedRoomCode = null;
+
+  try{
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(slotRef);
+      const data = snap.exists ? snap.data() : null;
+      const isStale = data && data.queued_at && (Date.now() - data.queued_at.toMillis() > STALE_QUEUE_MS);
+      const isFree = !data || data.uid === null || data.room_code !== null || isStale;
+
+      if (isFree){
+        // Kimse yok (ya da hayalet/eşleşmiş eski kayıt): bekleyen taraf biz oluyoruz
+        tx.set(slotRef, { uid: myUid, room_code: null, queued_at: firebase.firestore.FieldValue.serverTimestamp() });
+      } else {
+        // Bekleyen biri var: onunla eşleş, odayı biz kuruyoruz (o player1, biz player2)
+        const code = randomRoomCode();
+        const roomRef = db.collection('duels').doc(code);
+        tx.set(roomRef, {
+          player1_uid: data.uid, player2_uid: myUid,
+          status: 'picking',
+          team1_id: null, team1_name: null, team2_id: null, team2_name: null,
+          round_number: 1, max_rounds: 5,
+          guess_seconds: 30, guess_deadline_ms: null,
+          pick_seconds: 30, pick_deadline_ms: Date.now() + 30000,
+          score1: 0, score2: 0,
+          round_winner: null, round_answer: null, round_note: null,
+          pass1: false, pass2: false,
+          rematch1: false, rematch2: false,
+          created_at: firebase.firestore.FieldValue.serverTimestamp(),
+          updated_at: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        tx.update(slotRef, { room_code: code });
+        matchedRoomCode = code;
+      }
+    });
+  }catch(e){
+    renderLanding('Eşleşme sırasında hata: ' + e.message);
+    return;
+  }
+
+  if (matchedRoomCode){
+    roomCode = matchedRoomCode;
+    sessionStorage.setItem('duelRoomCode', roomCode);
+    attachListener();
+    return;
+  }
+
+  // Bekleyen taraf biz olduk: slotu dinle, biri bizimle eşleşince room_code dolacak
+  matchmakingUnsub = slotRef.onSnapshot(snap => {
+    const data = snap.data();
+    if (data && data.uid === myUid && data.room_code){
+      stopMatchmakingListener();
+      roomCode = data.room_code;
+      sessionStorage.setItem('duelRoomCode', roomCode);
+      attachListener();
+    }
+  });
+}
+
+async function cancelQuickMatch(){
+  stopMatchmakingListener();
+  const slotRef = db.collection('matchmaking').doc(MATCHMAKING_DOC_ID);
+  try{
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(slotRef);
+      const data = snap.exists ? snap.data() : null;
+      if (data && data.uid === myUid && data.room_code === null){
+        tx.set(slotRef, { uid: null, room_code: null, queued_at: null });
+      }
+    });
+  }catch(e){ /* önemli değil */ }
+  renderLanding();
+}
+
+function renderLanding(errMsg){
+  if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+  stopMatchmakingListener();
+  stopTimerLoop();
+  board.innerHTML = `
+    <h2>Arkadaşınla Düello Yap</h2>
+    <p class="sub">Bir oda kur, kodu arkadaşına gönder. Sırayla birer takım yazın, sonra ikiniz de o iki takımda oynayan oyuncuyu bilmeye çalışın — önce bilen puanı alır.</p>
+
+    <div style="margin-bottom:14px;">
+      <div class="scoreboard round-tag" style="justify-content:flex-start; gap:8px; background:none; padding:0; margin-bottom:6px;">Round Sayısı</div>
+      <div class="difficulty-row" id="round-select" style="display:flex; gap:6px;"></div>
+    </div>
+    <div style="margin-bottom:18px;">
+      <div class="scoreboard round-tag" style="justify-content:flex-start; gap:8px; background:none; padding:0; margin-bottom:6px;">Tahmin Süresi</div>
+      <div class="difficulty-row" id="timer-select" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+    </div>
+
+    <button class="btn" id="create-btn">Oda Kur</button>
+    <div class="input-shell" style="margin-top:18px;"><input type="text" id="join-code" placeholder="Oda kodunu gir" maxlength="6" style="text-transform:uppercase;"></div>
+    <button class="btn secondary" id="join-btn">Odaya Katıl</button>
+    <div class="error-line">${errMsg ? esc(errMsg) : ''}</div>
+
+    <div class="divider" style="height:1px; background:var(--line); margin:18px 0;"></div>
+    <button class="btn" id="quick-match-btn">Hızlı Eşleşme</button>
+    <p class="sub" style="text-align:center; margin-top:6px; margin-bottom:0;">Klasik: 5 round, takım seçmek için 30 sn, tahmin için 30 sn</p>
+  `;
+
+  let selectedRounds = 5;
+  let selectedTimer = 30;
+
+  const roundSelect = document.getElementById('round-select');
+  function renderRoundChips(){
+    roundSelect.innerHTML = ROUND_OPTIONS.map(r =>
+      `<div class="chip-opt ${r === selectedRounds ? 'active' : ''}" data-r="${r}" style="flex:1; text-align:center; padding:8px 6px; border-radius:9px; border:1.5px solid var(--line-strong); background:${r === selectedRounds ? 'rgba(74,222,128,0.12)' : 'rgba(0,0,0,0.2)'}; color:${r === selectedRounds ? 'var(--turf)' : 'var(--floodlight-dim)'}; font-size:12px; font-weight:700; cursor:pointer;">${r}</div>`
+    ).join('');
+    roundSelect.querySelectorAll('.chip-opt').forEach(chip => {
+      chip.onclick = () => { selectedRounds = parseInt(chip.dataset.r, 10); renderRoundChips(); };
+    });
+  }
+  const timerSelect = document.getElementById('timer-select');
+  function renderTimerChips(){
+    timerSelect.innerHTML = TIMER_OPTIONS.map(t =>
+      `<div class="chip-opt" data-t="${t.value}" style="flex:1; min-width:60px; text-align:center; padding:8px 6px; border-radius:9px; border:1.5px solid var(--line-strong); background:${t.value === selectedTimer ? 'rgba(74,222,128,0.12)' : 'rgba(0,0,0,0.2)'}; color:${t.value === selectedTimer ? 'var(--turf)' : 'var(--floodlight-dim)'}; font-size:12px; font-weight:700; cursor:pointer;">${t.label}</div>`
+    ).join('');
+    timerSelect.querySelectorAll('.chip-opt').forEach(chip => {
+      chip.onclick = () => { selectedTimer = parseInt(chip.dataset.t, 10); renderTimerChips(); };
+    });
+  }
+  renderRoundChips();
+  renderTimerChips();
+
+  document.getElementById('quick-match-btn').onclick = quickMatch;
+  document.getElementById('create-btn').onclick = (e) => {
+    e.target.disabled = true;
+    e.target.textContent = 'Oluşturuluyor…';
+    createRoom(selectedRounds, selectedTimer);
+  };
+  document.getElementById('join-btn').onclick = (e) => {
+    const code = document.getElementById('join-code').value.trim().toUpperCase();
+    if (code.length > 0) {
+      e.target.disabled = true;
+      e.target.textContent = 'Katılınıyor…';
+      joinRoom(code);
+    }
+  };
+}
+
+async function createRoom(maxRounds, guessSeconds){
+  maxRounds = ROUND_OPTIONS.includes(maxRounds) ? maxRounds : 5;
+  guessSeconds = TIMER_OPTIONS.some(t => t.value === guessSeconds) ? guessSeconds : 30;
+  for (let attempt = 0; attempt < 5; attempt++){
+    const code = randomRoomCode();
+    try{
+      await db.collection('duels').doc(code).set({
+        player1_uid: myUid,
+        player2_uid: null,
+        status: 'waiting',
+        team1_id: null, team1_name: null,
+        team2_id: null, team2_name: null,
+        round_number: 1, max_rounds: maxRounds,
+        guess_seconds: guessSeconds, guess_deadline_ms: null,
+        pick_seconds: 0, pick_deadline_ms: null,
+        score1: 0, score2: 0,
+        round_winner: null, round_answer: null, round_note: null,
+        pass1: false, pass2: false,
+        rematch1: false, rematch2: false,
+        created_at: firebase.firestore.FieldValue.serverTimestamp(),
+        updated_at: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      roomCode = code;
+      sessionStorage.setItem('duelRoomCode', roomCode);
+      attachListener();
+      return;
+    }catch(e){
+      if (attempt === 4) renderLanding('Oda oluşturulamadı: ' + e.message);
+    }
+  }
+}
+
+async function joinRoom(code){
+  try{
+    const ref = db.collection('duels').doc(code);
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      if (!snap.exists) throw new Error('Bu kodla bir oda bulunamadı');
+      const data = snap.data();
+      if (data.player2_uid !== null) throw new Error('Bu oda zaten dolu');
+      if (data.player1_uid === myUid) throw new Error('Kendi odana katılamazsın, başka bir tarayıcı/cihaz kullan');
+      tx.update(ref, {
+        player2_uid: myUid,
+        status: 'picking',
+        updated_at: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    });
+    roomCode = code;
+    sessionStorage.setItem('duelRoomCode', roomCode);
+    attachListener();
+  }catch(e){
+    renderLanding(e.message || 'Odaya katılamadın');
+  }
+}
+
+function attachListener(){
+  if (unsubscribe) unsubscribe();
+  unsubscribe = db.collection('duels').doc(roomCode).onSnapshot(snap => {
+    if (!snap.exists){
+      sessionStorage.removeItem('duelRoomCode');
+      renderLanding('Oda bulunamadı');
+      return;
+    }
+    renderState(snap.data());
+  }, err => {
+    renderLanding('Bağlantı hatası: ' + err.message);
+  });
+}
+
+function renderState(state){
+  const playerNum = state.player1_uid === myUid ? 1 : 2;
+  const you = playerNum === 1 ? state.score1 : state.score2;
+  const opp = playerNum === 1 ? state.score2 : state.score1;
+  const scoreHtml = `
+    <div class="room-code">${esc(roomCode)}</div>
+    <div class="scoreboard">
+      <span class="me">SEN ${you}</span>
+      <span class="round-tag">ROUND ${state.round_number} / ${state.max_rounds}</span>
+      <span>RAKİP ${opp}</span>
+    </div>
+    <button class="btn secondary" id="exit-btn" style="margin-bottom:14px; padding:8px; font-size:12px;">Odadan Çık</button>`;
+
+  if (state.status === 'waiting'){
+    board.innerHTML = `
+      <h2>Oda Hazır</h2>
+      <p class="sub">Bu kodu arkadaşına gönder, katılmasını bekliyoruz.</p>
+      <div class="room-code">${esc(roomCode)}</div>
+      <div class="waiting-msg"><div class="spinner"></div>Rakip bekleniyor…</div>
+      <button class="btn secondary" id="exit-btn" style="margin-top:14px;">Odadan Çık</button>`;
+    lastRenderedKey = 'waiting';
+    return;
+  }
+
+  if (state.status === 'picking'){
+    const picker = firstPicker(state.round_number);
+    const team1Empty = state.team1_id === null;
+    const expectedPlayer = team1Empty ? picker : (picker === 1 ? 2 : 1);
+    const yourTurn = (expectedPlayer === playerNum);
+    const key = yourTurn ? 'picking-yourturn-' + state.round_number : 'picking-wait-' + state.round_number;
+
+    if (yourTurn){
+      if (lastRenderedKey !== key){
+        board.innerHTML = `
+          ${scoreHtml}
+          <h2>Sıra Sende</h2>
+          ${state.pick_deadline_ms ? `<div class="room-code" id="timer-box" style="font-size:26px; padding:8px; margin-bottom:14px;">--</div>` : ''}
+          <p class="sub">Bir takım adı yaz ve listeden seç.</p>
+          <div class="search-wrap">
+            <div class="input-shell"><input type="text" id="team-input" placeholder="Takım adı yaz…" autocomplete="off"></div>
+            <ul class="autocomplete-results" id="team-results"></ul>
+          </div>
+          <div class="error-line" id="pick-error"></div>`;
+        setupTeamAutocomplete(team1Empty);
+        lastRenderedKey = key;
+      }
+    } else {
+      if (lastRenderedKey !== key){
+        board.innerHTML = `${scoreHtml}<h2>Rakip Seçiyor</h2>${state.pick_deadline_ms ? `<div class="room-code" id="timer-box" style="font-size:26px; padding:8px; margin-bottom:14px;">--</div>` : ''}<div class="waiting-msg"><div class="spinner"></div>Rakibin bir takım yazıyor…</div>`;
+        lastRenderedKey = key;
+      }
+    }
+    startTimerLoop(state.pick_deadline_ms, pickTimeoutRound);
+    return;
+  }
+
+  if (state.status === 'guessing'){
+    const iPassed = playerNum === 1 ? state.pass1 : state.pass2;
+    const key = (iPassed ? 'guessing-waitpass-' : 'guessing-') + state.round_number;
+    if (lastRenderedKey !== key){
+      if (iPassed){
+        board.innerHTML = `
+          ${scoreHtml}
+          <div class="matchup">${esc(state.team1_name)} <span class="vs">VS</span> ${esc(state.team2_name)}</div>
+          <div class="waiting-msg"><div class="spinner"></div>Pas geçtin, rakip bekleniyor…</div>`;
+      } else {
+        board.innerHTML = `
+          ${scoreHtml}
+          <div class="matchup">${esc(state.team1_name)} <span class="vs">VS</span> ${esc(state.team2_name)}</div>
+          ${state.guess_seconds ? `<div class="room-code" id="timer-box" style="font-size:26px; padding:8px; margin-bottom:14px;">--</div>` : ''}
+          <p class="sub" style="text-align:center;">İkisinde de forma giymiş oyuncuyu bul — önce bilen kazanır!</p>
+          <div class="search-wrap">
+            <div class="input-shell"><input type="text" id="guess-input" placeholder="Oyuncu adını yaz…" autocomplete="off"></div>
+            <ul class="autocomplete-results" id="guess-results"></ul>
+          </div>
+          <div class="error-line" id="guess-error"></div>
+          <button class="btn secondary" id="pass-guess-btn" style="margin-top:14px;">Pas Geç</button>`;
+        setupGuessAutocomplete();
+        document.getElementById('pass-guess-btn').onclick = submitPass;
+      }
+      lastRenderedKey = key;
+    }
+    startTimerLoop(state.guess_deadline_ms, timeoutRound);
+    return;
+  }
+  stopTimerLoop();
+
+  if (state.status === 'round_result'){
+    const key = 'round_result-' + state.round_number;
+    if (lastRenderedKey !== key){
+      let resultHtml;
+      if (state.round_note === 'no_common'){
+        resultHtml = `
+          <div class="result-flash">
+            <div class="headline" style="color:var(--amber);">Ortak Oyuncu Yok</div>
+            <div class="detail">Bu iki takımda birlikte forma giymiş oyuncu bulunamadı, round otomatik pas geçildi.</div>
+          </div>`;
+      } else if (state.round_note === 'passed'){
+        resultHtml = `
+          <div class="result-flash">
+            <div class="headline" style="color:var(--amber);">Pas Geçildi</div>
+            <div class="detail">İkiniz de pas geçtiniz, sonraki rounda geçiliyor.</div>
+          </div>`;
+      } else if (state.round_note === 'timeout'){
+        const pair = findPair(state.team1_id, state.team2_id);
+        const allAnswers = pair ? pair.answers : [state.round_answer];
+        resultHtml = `
+          <div class="result-flash">
+            <div class="headline" style="color:var(--red-card);">Süre Doldu</div>
+            <div class="detail">Kimse bilemedi. Doğru cevap${allAnswers.length > 1 ? 'lar' : ''}: <b>${allAnswers.map(esc).join(', ')}</b></div>
+          </div>`;
+      } else {
+        const youWon = (playerNum === 1 && state.round_winner === 'player1') || (playerNum === 2 && state.round_winner === 'player2');
+        const pair = findPair(state.team1_id, state.team2_id);
+        const allAnswers = pair ? pair.answers : [state.round_answer];
+        const othersHtml = allAnswers.length > 1
+          ? `<br><span style="font-size:12px;">Diğer kabul edilen isimler: ${allAnswers.filter(a => a.toLocaleLowerCase('tr') !== (state.round_answer||'').toLocaleLowerCase('tr')).map(esc).join(', ')}</span>`
+          : '';
+        resultHtml = `
+          <div class="result-flash ${youWon ? 'win' : 'lose'}">
+            <div class="headline">${youWon ? 'Sen Kazandın!' : 'Rakip Kazandı'}</div>
+            <div class="detail">Doğru cevap: <b>${esc(state.round_answer)}</b>${othersHtml}</div>
+          </div>`;
+      }
+      board.innerHTML = `
+        ${scoreHtml}
+        ${resultHtml}
+        <button class="btn" id="next-round-btn">Sonraki Round →</button>`;
+      document.getElementById('next-round-btn').onclick = async (e) => {
+        e.target.disabled = true;
+        e.target.textContent = 'Bekleniyor…';
+        try{ await advanceRound(); } catch(err){ /* diğer oyuncu zaten ilerletmiş olabilir */ }
+      };
+      lastRenderedKey = key;
+    }
+    return;
+  }
+
+  if (state.status === 'finished'){
+    stopTimerLoop();
+    const youWon = you > opp, draw = you === opp;
+    const myReady = playerNum === 1 ? state.rematch1 : state.rematch2;
+    const oppReady = playerNum === 1 ? state.rematch2 : state.rematch1;
+    const key = 'finished-' + (myReady ? 'waiting' : 'idle') + '-' + (oppReady ? '1' : '0');
+    if (lastRenderedKey !== key){
+      board.innerHTML = `
+        <h2>Maç Bitti</h2>
+        <div class="result-flash ${draw ? '' : (youWon ? 'win' : 'lose')}">
+          <div class="headline">${draw ? 'Berabere' : (youWon ? 'Kazandın!' : 'Kaybettin')}</div>
+          <div class="detail">Skor: Sen ${you} — Rakip ${opp}</div>
+        </div>
+        ${oppReady && !myReady ? `<p class="sub" style="text-align:center;">Rakip tekrar oynamak istiyor!</p>` : ''}
+        <button class="btn" id="rematch-btn" ${myReady ? 'disabled' : ''}>${myReady ? 'Rakip bekleniyor…' : 'Tekrar Oyna (aynı oda)'}</button>
+        <button class="btn secondary" id="new-duel-btn" style="margin-top:10px;">Yeni Düello Kur</button>`;
+      document.getElementById('rematch-btn').onclick = requestRematch;
+      document.getElementById('new-duel-btn').onclick = exitRoom;
+      lastRenderedKey = key;
+    }
+    return;
+  }
+}
+
+function setupTeamAutocomplete(isTeam1Slot){
+  const input = document.getElementById('team-input');
+  const results = document.getElementById('team-results');
+  let t = null;
+  input.addEventListener('input', function(){
+    clearTimeout(t);
+    const q = this.value.trim().toLocaleLowerCase('tr');
+    if (q.length < 2){ results.style.display = 'none'; return; }
+    const names = [...new Set(TEAM_PAIRS.flatMap(p => [p.team1_name, p.team2_name]))];
+    const matches = names.filter(n => n.toLocaleLowerCase('tr').includes(q)).slice(0, 10);
+    results.innerHTML = '';
+    if (matches.length){
+      matches.forEach(name => {
+        const li = document.createElement('li');
+        li.innerText = name;
+        li.onclick = () => pickTeam(name, isTeam1Slot);
+        results.appendChild(li);
+      });
+      results.style.display = 'block';
+    } else results.style.display = 'none';
+  });
+}
+
+async function pickTeam(teamName, isTeam1Slot){
+  document.getElementById('team-results').style.display = 'none';
+  document.getElementById('team-input').disabled = true;
+  const errBox = document.getElementById('pick-error');
+
+  const found = TEAM_PAIRS.flatMap(p => [
+    { id: p.team1_id, name: p.team1_name },
+    { id: p.team2_id, name: p.team2_name }
+  ]).find(t => t.name === teamName);
+
+  if (!found){ errBox.textContent = 'Takım bulunamadı'; document.getElementById('team-input').disabled = false; return; }
+
+  const ref = db.collection('duels').doc(roomCode);
+  try{
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      const data = snap.data();
+      if (data.status !== 'picking') throw new Error('Şu an takım seçme sırası değil');
+      if (isTeam1Slot){
+        if (data.team1_id !== null) throw new Error('Rakibin zaten seçmiş, bekle');
+        const seconds = data.pick_seconds || 0;
+        const nextDeadline = seconds > 0 ? Date.now() + seconds * 1000 : null;
+        tx.update(ref, { team1_id: found.id, team1_name: found.name, pick_deadline_ms: nextDeadline, updated_at: firebase.firestore.FieldValue.serverTimestamp() });
+      } else {
+        if (data.team2_id !== null) throw new Error('Zaten seçilmiş');
+        if (found.id === data.team1_id) throw new Error('Rakibinin seçtiği takımı seçemezsin');
+        const pair = findPair(data.team1_id, found.id);
+        const hasCommonPlayer = pair && pair.answers && pair.answers.length > 0;
+        if (hasCommonPlayer){
+          const seconds = data.guess_seconds || 0;
+          const deadline = seconds > 0 ? Date.now() + seconds * 1000 : null;
+          tx.update(ref, { team2_id: found.id, team2_name: found.name, status: 'guessing', guess_deadline_ms: deadline, pick_deadline_ms: null, updated_at: firebase.firestore.FieldValue.serverTimestamp() });
+        } else {
+          tx.update(ref, { team2_id: found.id, team2_name: found.name, status: 'round_result', round_winner: null, round_answer: null, round_note: 'no_common', pick_deadline_ms: null, updated_at: firebase.firestore.FieldValue.serverTimestamp() });
+        }
+      }
+    });
+  }catch(e){
+    errBox.textContent = e.message;
+    document.getElementById('team-input').disabled = false;
+  }
+}
+
+function setupGuessAutocomplete(){
+  const input = document.getElementById('guess-input');
+  const results = document.getElementById('guess-results');
+  let t = null;
+  input.addEventListener('input', function(){
+    clearTimeout(t);
+    const q = this.value.trim().toLocaleLowerCase('tr');
+    if (q.length < 2){ results.style.display = 'none'; return; }
+    const matches = ALL_PLAYERS.filter(n => n.toLocaleLowerCase('tr').includes(q)).slice(0, 10);
+    results.innerHTML = '';
+    if (matches.length){
+      matches.forEach(name => {
+        const li = document.createElement('li');
+        li.innerText = name;
+        li.onclick = () => submitGuess(name);
+        results.appendChild(li);
+      });
+      results.style.display = 'block';
+    } else results.style.display = 'none';
+  });
+}
+
+async function submitGuess(name){
+  document.getElementById('guess-results').style.display = 'none';
+  document.getElementById('guess-input').disabled = true;
+  const errBox = document.getElementById('guess-error');
+  const ref = db.collection('duels').doc(roomCode);
+
+  try{
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      const data = snap.data();
+      if (data.status !== 'guessing'){
+        throw { code: 'round_over', message: 'Bu round için tahmin süresi bitti (rakip önce bildi).' };
+      }
+      const pair = findPair(data.team1_id, data.team2_id);
+      const answers = pair ? pair.answers : [];
+      const isCorrect = answers.some(a => a.toLocaleLowerCase('tr') === name.toLocaleLowerCase('tr'));
+      if (!isCorrect){
+        throw { code: 'wrong', message: 'Yanlış, tekrar dene' };
+      }
+      const playerNum = data.player1_uid === myUid ? 1 : 2;
+      const winnerKey = playerNum === 1 ? 'player1' : 'player2';
+      const scoreField = playerNum === 1 ? 'score1' : 'score2';
+      tx.update(ref, {
+        status: 'round_result',
+        [scoreField]: (data[scoreField] || 0) + 1,
+        round_winner: winnerKey,
+        round_answer: name,
+        updated_at: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    });
+  }catch(e){
+    if (e.code === 'wrong'){
+      errBox.textContent = 'Yanlış, tekrar dene';
+      document.getElementById('guess-input').disabled = false;
+      document.getElementById('guess-input').value = '';
+    } else {
+      errBox.textContent = e.message || 'Bir hata oluştu';
+    }
+  }
+}
+
+async function submitPass(){
+  const passBtn = document.getElementById('pass-guess-btn');
+  if (passBtn) passBtn.disabled = true;
+  const ref = db.collection('duels').doc(roomCode);
+  try{
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      const data = snap.data();
+      if (data.status !== 'guessing') return;
+      const playerNum = data.player1_uid === myUid ? 1 : 2;
+      const myField = playerNum === 1 ? 'pass1' : 'pass2';
+      const otherPassed = playerNum === 1 ? data.pass2 : data.pass1;
+      if (otherPassed){
+        tx.update(ref, { [myField]: true, status: 'round_result', round_winner: null, round_answer: null, round_note: 'passed', updated_at: firebase.firestore.FieldValue.serverTimestamp() });
+      } else {
+        tx.update(ref, { [myField]: true, updated_at: firebase.firestore.FieldValue.serverTimestamp() });
+      }
+    });
+  }catch(e){ /* sessizce yok say */ }
+}
+
+async function pickTimeoutRound(){
+  const ref = db.collection('duels').doc(roomCode);
+  try{
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      const data = snap.data();
+      if (data.status !== 'picking') return;
+      if (!data.pick_deadline_ms || Date.now() < data.pick_deadline_ms) return;
+
+      if (data.team1_id === null){
+        // team1 seçilmedi: rastgele bir takım ata, team2'nin seçimi için yeni süre başlat
+        const allTeams = [...new Map(TEAM_PAIRS.flatMap(p => [[p.team1_id, p.team1_name], [p.team2_id, p.team2_name]])).entries()]
+          .map(([id, name]) => ({ id, name }));
+        const randomTeam = allTeams[Math.floor(Math.random() * allTeams.length)];
+        const seconds = data.pick_seconds || 0;
+        const nextDeadline = seconds > 0 ? Date.now() + seconds * 1000 : null;
+        tx.update(ref, {
+          team1_id: randomTeam.id, team1_name: randomTeam.name,
+          pick_deadline_ms: nextDeadline,
+          updated_at: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } else {
+        // team2 seçilmedi: team1 ile ortak oyuncusu olan rastgele bir takım ata.
+        // Mümkünse en az 2 ortak oyuncusu olan bir eşleşme seç — tek cevaplı,
+        // şansa dayalı roundlar çıkmasın diye.
+        const partners = TEAM_PAIRS
+          .filter(p => p.team1_id === data.team1_id || p.team2_id === data.team1_id)
+          .map(p => ({
+            id: p.team1_id === data.team1_id ? p.team2_id : p.team1_id,
+            name: p.team1_id === data.team1_id ? p.team2_name : p.team1_name,
+            answerCount: (p.answers || []).length
+          }));
+
+        if (partners.length === 0){
+          tx.update(ref, { status: 'round_result', round_winner: null, round_answer: null, round_note: 'no_common', pick_deadline_ms: null, updated_at: firebase.firestore.FieldValue.serverTimestamp() });
+          return;
+        }
+        const goodPartners = partners.filter(p => p.answerCount >= 2);
+        const pool = goodPartners.length > 0 ? goodPartners : partners;
+        const randomPartner = pool[Math.floor(Math.random() * pool.length)];
+        const seconds = data.guess_seconds || 0;
+        const guessDeadline = seconds > 0 ? Date.now() + seconds * 1000 : null;
+        tx.update(ref, {
+          team2_id: randomPartner.id, team2_name: randomPartner.name,
+          status: 'guessing', guess_deadline_ms: guessDeadline, pick_deadline_ms: null,
+          updated_at: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    });
+  }catch(e){ /* rakip zaten seçmiş olabilir, sorun değil */ }
+}
+
+async function timeoutRound(){
+  const ref = db.collection('duels').doc(roomCode);
+  try{
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      const data = snap.data();
+      if (data.status !== 'guessing') return;
+      if (!data.guess_deadline_ms || Date.now() < data.guess_deadline_ms) return;
+      const pair = findPair(data.team1_id, data.team2_id);
+      const answer = pair && pair.answers && pair.answers.length ? pair.answers[0] : null;
+      tx.update(ref, { status: 'round_result', round_winner: null, round_answer: answer, round_note: 'timeout', updated_at: firebase.firestore.FieldValue.serverTimestamp() });
+    });
+  }catch(e){ /* rakip zaten ilerletmiş olabilir */ }
+}
+
+async function advanceRound(){
+  const ref = db.collection('duels').doc(roomCode);
+  await db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    const data = snap.data();
+    if (data.status !== 'round_result') return;
+    const nextRound = data.round_number + 1;
+    if (nextRound > data.max_rounds){
+      tx.update(ref, { status: 'finished', updated_at: firebase.firestore.FieldValue.serverTimestamp() });
+    } else {
+      const seconds = data.pick_seconds || 0;
+      const pickDeadline = seconds > 0 ? Date.now() + seconds * 1000 : null;
+      tx.update(ref, {
+        status: 'picking', round_number: nextRound,
+        team1_id: null, team1_name: null, team2_id: null, team2_name: null,
+        round_winner: null, round_answer: null, round_note: null,
+        pass1: false, pass2: false, guess_deadline_ms: null, pick_deadline_ms: pickDeadline,
+        updated_at: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  });
+}
+
+async function requestRematch(){
+  const btn = document.getElementById('rematch-btn');
+  if (btn){ btn.disabled = true; btn.textContent = 'Bekleniyor…'; }
+  const ref = db.collection('duels').doc(roomCode);
+  try{
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      const data = snap.data();
+      if (data.status !== 'finished') return;
+      const playerNum = data.player1_uid === myUid ? 1 : 2;
+      const myField = playerNum === 1 ? 'rematch1' : 'rematch2';
+      const otherReady = playerNum === 1 ? data.rematch2 : data.rematch1;
+      if (otherReady){
+        const seconds = data.pick_seconds || 0;
+        const pickDeadline = seconds > 0 ? Date.now() + seconds * 1000 : null;
+        tx.update(ref, {
+          status: 'picking', round_number: 1,
+          score1: 0, score2: 0,
+          team1_id: null, team1_name: null, team2_id: null, team2_name: null,
+          round_winner: null, round_answer: null, round_note: null,
+          pass1: false, pass2: false, guess_deadline_ms: null, pick_deadline_ms: pickDeadline,
+          rematch1: false, rematch2: false,
+          updated_at: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } else {
+        tx.update(ref, { [myField]: true, updated_at: firebase.firestore.FieldValue.serverTimestamp() });
+      }
+    });
+  }catch(e){ /* sessizce yok say */ }
+}
+
+(async () => {
+  const DATA_VERSION = 3; // players.json / team_pairs.json güncellendiğinde bu sayıyı artır
+  const [pairsRes, playersRes] = await Promise.all([fetch('data/team_pairs.json?v=' + DATA_VERSION), fetch('data/players.json?v=' + DATA_VERSION)]);
+  TEAM_PAIRS = await pairsRes.json();
+  ALL_PLAYERS = await playersRes.json();
+
+  const user = await ensureSignedIn();
+  myUid = user.uid;
+
+  if (roomCode) attachListener(); else renderLanding();
+})();
+</script>
+</body>
+</html>

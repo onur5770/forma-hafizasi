@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Tek kullanılan koleksiyon: duels. (Takım/oyuncu verisi Firestore'da değil,
+    // public/data/*.json içinde — Hosting'den bedava servis ediliyor.)
+    match /duels/{roomCode} {
+
+      // Sadece anonim de olsa giriş yapmış biri odaları görebilir/oluşturabilir.
+      // Bilmediği bir oda koduna rastgele saldırıyı tamamen engellemez ama
+      // en azından "kimliksiz" (auth'suz) toplu botlara kapıyı kapatır.
+      allow read: if request.auth != null;
+
+      // Oda oluşturma iki şekilde olabilir:
+      allow create: if request.auth != null && (
+        // (a) Normal "Oda Kur": sadece kendini player1 yapabilir, player2 boş, durum 'waiting'
+        (request.resource.data.player1_uid == request.auth.uid
+          && request.resource.data.player2_uid == null
+          && request.resource.data.status == 'waiting')
+        ||
+        // (b) Hızlı Eşleşme: bekleyen başka birini player1 alıp kendini player2 yaparak
+        //     odayı direkt 'picking' durumunda kurar (ikisi de zaten atanmış olur)
+        (request.resource.data.player2_uid == request.auth.uid
+          && request.resource.data.player1_uid != request.auth.uid
+          && request.resource.data.status == 'picking')
+      );
+
+      // Güncelleme üç durumdan biri olabilir:
+      allow update: if request.auth != null && (
+        // (a) Odaya katılma: player2_uid boşken sadece kendi uid'ini yazabilir,
+        //     player1_uid'i değiştiremez.
+        (resource.data.player2_uid == null
+          && request.resource.data.player2_uid == request.auth.uid
+          && request.resource.data.player1_uid == resource.data.player1_uid)
+        ||
+        // (b) Oyun içi her güncelleme: sadece o odadaki iki oyuncudan biriyse,
+        //     VE kimlik/oda ayarları hiç değişmiyorsa, VE skor sadece aynı
+        //     kalıyor ya da tam +1 artıyorsa (rastgele bir değere zıplayamaz).
+        //     Diğer alanlar (status, team id'leri, pass/rematch bayrakları vb.)
+        //     için tam alan-bazlı doğrulama yok — bu, Cloud Functions olmadan
+        //     pratik sınır. Arkadaşlar arası bir oyun için yeterli koruma.
+        (
+          (resource.data.player1_uid == request.auth.uid || resource.data.player2_uid == request.auth.uid)
+          && request.resource.data.player1_uid == resource.data.player1_uid
+          && request.resource.data.player2_uid == resource.data.player2_uid
+          && request.resource.data.max_rounds == resource.data.max_rounds
+          && request.resource.data.guess_seconds == resource.data.guess_seconds
+          && request.resource.data.pick_seconds == resource.data.pick_seconds
+          && request.resource.data.created_at == resource.data.created_at
+          && request.resource.data.score1 in [resource.data.score1, resource.data.score1 + 1, 0]
+          && request.resource.data.score2 in [resource.data.score2, resource.data.score2 + 1, 0]
+        )
+      );
+
+      allow delete: if false; // odalar silinmesin, gerekirse TTL ile otomatik temizlenir
+    }
+
+    // Hızlı Eşleşme (rastgele rakip) için tek bir "bekleme köşesi" dokümanı.
+    // Herkese açık bir eşleştirme kuyruğu olduğu için duels kadar sıkı değil —
+    // herhangi bir anonim ziyaretçi okuyup yazabilir, bu kabul edilen bir risk.
+    match /matchmaking/{slotId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Başka hiçbir koleksiyona erişim yok.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

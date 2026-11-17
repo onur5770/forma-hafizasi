@@ -1,0 +1,1097 @@
+[
+  {
+    "id": "3",
+    "name": "1. Fußball-Club Köln",
+    "league": "Almanya"
+  },
+  {
+    "id": "4",
+    "name": "1.FC Nuremberg",
+    "league": "Almanya"
+  },
+  {
+    "id": "5",
+    "name": "Associazione Calcio Milan",
+    "league": "İtalya"
+  },
+  {
+    "id": "6",
+    "name": "Adanaspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "10",
+    "name": "Arminia Bielefeld",
+    "league": "Almanya"
+  },
+  {
+    "id": "11",
+    "name": "Arsenal Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "12",
+    "name": "Associazione Sportiva Roma",
+    "league": "İtalya"
+  },
+  {
+    "id": "13",
+    "name": "Club Atlético de Madrid S.A.D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "15",
+    "name": "Bayer 04 Leverkusen Fußball",
+    "league": "Almanya"
+  },
+  {
+    "id": "16",
+    "name": "Borussia Dortmund",
+    "league": "Almanya"
+  },
+  {
+    "id": "18",
+    "name": "Borussia Verein für Leibesübungen 1900 Mönchengladbach",
+    "league": "Almanya"
+  },
+  {
+    "id": "19",
+    "name": "Brescia Calcio",
+    "league": "İtalya"
+  },
+  {
+    "id": "20",
+    "name": "Bursaspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "23",
+    "name": "Eintracht Braunschweig",
+    "league": "Almanya"
+  },
+  {
+    "id": "24",
+    "name": "Eintracht Frankfurt Fußball AG",
+    "league": "Almanya"
+  },
+  {
+    "id": "27",
+    "name": "FC Bayern München",
+    "league": "Almanya"
+  },
+  {
+    "id": "29",
+    "name": "Everton Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "31",
+    "name": "Liverpool Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "33",
+    "name": "FC Schalke 04",
+    "league": "Almanya"
+  },
+  {
+    "id": "35",
+    "name": "Fußball-Club St. Pauli von 1910",
+    "league": "Almanya"
+  },
+  {
+    "id": "36",
+    "name": "Fenerbahçe Spor Kulübü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "38",
+    "name": "Fortuna Düsseldorf",
+    "league": "Almanya"
+  },
+  {
+    "id": "39",
+    "name": "1. Fußball- und Sportverein Mainz 05",
+    "league": "Almanya"
+  },
+  {
+    "id": "40",
+    "name": "FC Girondins Bordeaux",
+    "league": "Fransa"
+  },
+  {
+    "id": "41",
+    "name": "Hamburger Sport Verein",
+    "league": "Almanya"
+  },
+  {
+    "id": "42",
+    "name": "Hannover 96",
+    "league": "Almanya"
+  },
+  {
+    "id": "44",
+    "name": "Hertha BSC",
+    "league": "Almanya"
+  },
+  {
+    "id": "46",
+    "name": "Football Club Internazionale Milano S.p.A.",
+    "league": "İtalya"
+  },
+  {
+    "id": "60",
+    "name": "Sport-Club Freiburg",
+    "league": "Almanya"
+  },
+  {
+    "id": "65",
+    "name": "SpVgg Greuther Fürth",
+    "league": "Almanya"
+  },
+  {
+    "id": "79",
+    "name": "Verein für Bewegungsspiele Stuttgart 1893",
+    "league": "Almanya"
+  },
+  {
+    "id": "80",
+    "name": "VfL Bochum",
+    "league": "Almanya"
+  },
+  {
+    "id": "82",
+    "name": "Verein für Leibesübungen Wolfsburg",
+    "league": "Almanya"
+  },
+  {
+    "id": "86",
+    "name": "Sportverein Werder Bremen von 1899",
+    "league": "Almanya"
+  },
+  {
+    "id": "89",
+    "name": "1. Fußballclub Union Berlin",
+    "league": "Almanya"
+  },
+  {
+    "id": "105",
+    "name": "SV Darmstadt 98",
+    "league": "Almanya"
+  },
+  {
+    "id": "114",
+    "name": "Beşiktaş Jimnastik Kulübü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "120",
+    "name": "Kocaelispor Kulübü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "126",
+    "name": "Çaykur Rizespor Kulübü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "127",
+    "name": "SC Paderborn 07",
+    "league": "Almanya"
+  },
+  {
+    "id": "130",
+    "name": "Parma Calcio 1913",
+    "league": "İtalya"
+  },
+  {
+    "id": "131",
+    "name": "Futbol Club Barcelona",
+    "league": "İspanya"
+  },
+  {
+    "id": "141",
+    "name": "Galatasaray Spor Kulübü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "142",
+    "name": "Real Zaragoza",
+    "league": "İspanya"
+  },
+  {
+    "id": "148",
+    "name": "Tottenham Hotspur Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "150",
+    "name": "Real Betis Balompié S.A.D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "152",
+    "name": "Samsunspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "162",
+    "name": "Association sportive de Monaco Football Club",
+    "league": "Fransa"
+  },
+  {
+    "id": "167",
+    "name": "Fußball-Club Augsburg 1907",
+    "league": "Almanya"
+  },
+  {
+    "id": "180",
+    "name": "Southampton FC",
+    "league": "İngiltere"
+  },
+  {
+    "id": "237",
+    "name": "Real Club Deportivo Mallorca S.A.D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "244",
+    "name": "Olympique de Marseille",
+    "league": "Fransa"
+  },
+  {
+    "id": "252",
+    "name": "Genoa Cricket and Football Club",
+    "league": "İtalya"
+  },
+  {
+    "id": "269",
+    "name": "Holstein Kiel",
+    "league": "Almanya"
+  },
+  {
+    "id": "273",
+    "name": "Stade Rennais Football Club",
+    "league": "Fransa"
+  },
+  {
+    "id": "276",
+    "name": "Verona Hellas Football Club",
+    "league": "İtalya"
+  },
+  {
+    "id": "281",
+    "name": "Manchester City Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "289",
+    "name": "Sunderland Association Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "290",
+    "name": "Association de la Jeunesse auxerroise",
+    "league": "Fransa"
+  },
+  {
+    "id": "331",
+    "name": "Club Atlético Osasuna",
+    "league": "İspanya"
+  },
+  {
+    "id": "347",
+    "name": "Football Club de Metz",
+    "league": "Fransa"
+  },
+  {
+    "id": "350",
+    "name": "Sheffield United",
+    "league": "İngiltere"
+  },
+  {
+    "id": "366",
+    "name": "Real Valladolid CF",
+    "league": "İspanya"
+  },
+  {
+    "id": "367",
+    "name": "Rayo Vallecano de Madrid S. A. D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "368",
+    "name": "Sevilla Fútbol Club S.A.D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "379",
+    "name": "West Ham United Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "380",
+    "name": "US Salernitana 1919",
+    "league": "İtalya"
+  },
+  {
+    "id": "398",
+    "name": "Società Sportiva Lazio S.p.A.",
+    "league": "İtalya"
+  },
+  {
+    "id": "399",
+    "name": "Leeds United Association Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "405",
+    "name": "Aston Villa Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "410",
+    "name": "Udinese Calcio",
+    "league": "İtalya"
+  },
+  {
+    "id": "415",
+    "name": "Toulouse Football Club",
+    "league": "Fransa"
+  },
+  {
+    "id": "416",
+    "name": "Torino Calcio",
+    "league": "İtalya"
+  },
+  {
+    "id": "417",
+    "name": "Olympique Gymnaste Club Nice Côte d'Azur",
+    "league": "Fransa"
+  },
+  {
+    "id": "418",
+    "name": "Real Madrid Club de Fútbol",
+    "league": "İspanya"
+  },
+  {
+    "id": "430",
+    "name": "Associazione Calcio Fiorentina",
+    "league": "İtalya"
+  },
+  {
+    "id": "449",
+    "name": "Trabzonspor Kulübü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "458",
+    "name": "Palermo FC",
+    "league": "İtalya"
+  },
+  {
+    "id": "472",
+    "name": "UD Las Palmas",
+    "league": "İspanya"
+  },
+  {
+    "id": "506",
+    "name": "Juventus Football Club",
+    "league": "İtalya"
+  },
+  {
+    "id": "512",
+    "name": "Stoke City",
+    "league": "İngiltere"
+  },
+  {
+    "id": "524",
+    "name": "Gaziantepspor (- 2020)",
+    "league": "Türkiye"
+  },
+  {
+    "id": "533",
+    "name": "Turn- und Sportgemeinschaft 1899 Hoffenheim Fußball-Spielbetriebs",
+    "league": "Almanya"
+  },
+  {
+    "id": "543",
+    "name": "Wolverhampton Wanderers Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "583",
+    "name": "Paris Saint-Germain Football Club",
+    "league": "Fransa"
+  },
+  {
+    "id": "589",
+    "name": "Antalyaspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "595",
+    "name": "SC Bastia",
+    "league": "Fransa"
+  },
+  {
+    "id": "603",
+    "name": "Cardiff City",
+    "league": "İngiltere"
+  },
+  {
+    "id": "607",
+    "name": "Venezia FC",
+    "league": "İtalya"
+  },
+  {
+    "id": "618",
+    "name": "AS Saint-Étienne",
+    "league": "Fransa"
+  },
+  {
+    "id": "621",
+    "name": "Athletic Club Bilbao",
+    "league": "İspanya"
+  },
+  {
+    "id": "631",
+    "name": "Chelsea Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "641",
+    "name": "Middlesbrough FC",
+    "league": "İngiltere"
+  },
+  {
+    "id": "667",
+    "name": "Racing Club de Strasbourg Alsace",
+    "league": "Fransa"
+  },
+  {
+    "id": "677",
+    "name": "Ipswich Town",
+    "league": "İngiltere"
+  },
+  {
+    "id": "681",
+    "name": "Real Sociedad de Fútbol S.A.D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "703",
+    "name": "Nottingham Forest Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "714",
+    "name": "Reial Club Deportiu Espanyol de Barcelona S.A.D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "738",
+    "name": "Le Havre Athletic Club",
+    "league": "Fransa"
+  },
+  {
+    "id": "749",
+    "name": "FC Empoli",
+    "league": "İtalya"
+  },
+  {
+    "id": "750",
+    "name": "FC Sochaux-Montbéliard",
+    "league": "Fransa"
+  },
+  {
+    "id": "762",
+    "name": "Newcastle United Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "800",
+    "name": "Atalanta Bergamasca Calcio S.p.a.",
+    "league": "İtalya"
+  },
+  {
+    "id": "820",
+    "name": "Gençlerbirliği Spor Kulübü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "825",
+    "name": "Eskisehirspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "826",
+    "name": "Racing Club de Lens",
+    "league": "Fransa"
+  },
+  {
+    "id": "833",
+    "name": "Denizlispor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "855",
+    "name": "EA Guingamp",
+    "league": "Fransa"
+  },
+  {
+    "id": "862",
+    "name": "Chievo Verona",
+    "league": "İtalya"
+  },
+  {
+    "id": "868",
+    "name": "MKE Ankaragücü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "873",
+    "name": "Crystal Palace Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "897",
+    "name": "Deportivo de La Coruña",
+    "league": "İspanya"
+  },
+  {
+    "id": "924",
+    "name": "Istanbulspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "931",
+    "name": "Fulham Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "940",
+    "name": "Real Club Celta de Vigo S. A. D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "969",
+    "name": "Montpellier HSC",
+    "league": "Fransa"
+  },
+  {
+    "id": "984",
+    "name": "West Bromwich Albion",
+    "league": "İngiltere"
+  },
+  {
+    "id": "985",
+    "name": "Manchester United Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "989",
+    "name": "Association Football Club Bournemouth",
+    "league": "İngiltere"
+  },
+  {
+    "id": "993",
+    "name": "Córdoba CF",
+    "league": "İspanya"
+  },
+  {
+    "id": "995",
+    "name": "Football Club de Nantes",
+    "league": "Fransa"
+  },
+  {
+    "id": "1003",
+    "name": "Leicester City",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1005",
+    "name": "Unione Sportiva Lecce",
+    "league": "İtalya"
+  },
+  {
+    "id": "1010",
+    "name": "Watford FC",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1025",
+    "name": "Bologna Football Club 1909",
+    "league": "İtalya"
+  },
+  {
+    "id": "1031",
+    "name": "Luton Town",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1032",
+    "name": "Reading FC",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1038",
+    "name": "UC Sampdoria",
+    "league": "İtalya"
+  },
+  {
+    "id": "1039",
+    "name": "Queens Park Rangers",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1041",
+    "name": "Olympique Lyonnais",
+    "league": "Fransa"
+  },
+  {
+    "id": "1047",
+    "name": "Calcio Como",
+    "league": "İtalya"
+  },
+  {
+    "id": "1049",
+    "name": "Valencia Club de Fútbol S. A. D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "1050",
+    "name": "Villarreal Club de Fútbol S.A.D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "1071",
+    "name": "Wigan Athletic",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1082",
+    "name": "Lille Olympique Sporting Club",
+    "league": "Fransa"
+  },
+  {
+    "id": "1084",
+    "name": "Málaga CF",
+    "league": "İspanya"
+  },
+  {
+    "id": "1095",
+    "name": "ESTAC Troyes",
+    "league": "Fransa"
+  },
+  {
+    "id": "1108",
+    "name": "Deportivo Alavés S. A. D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "1110",
+    "name": "Huddersfield Town",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1123",
+    "name": "Norwich City",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1132",
+    "name": "Burnley Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1147",
+    "name": "AC Ajaccio",
+    "league": "Fransa"
+  },
+  {
+    "id": "1148",
+    "name": "Brentford Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1158",
+    "name": "Football Club Lorient-Bretagne Sud",
+    "league": "Fransa"
+  },
+  {
+    "id": "1159",
+    "name": "AS Nancy-Lorraine",
+    "league": "Fransa"
+  },
+  {
+    "id": "1160",
+    "name": "Nîmes Olympique",
+    "league": "Fransa"
+  },
+  {
+    "id": "1162",
+    "name": "SM Caen",
+    "league": "Fransa"
+  },
+  {
+    "id": "1210",
+    "name": "US Livorno 1915",
+    "league": "İtalya"
+  },
+  {
+    "id": "1237",
+    "name": "Brighton and Hove Albion Football Club",
+    "league": "İngiltere"
+  },
+  {
+    "id": "1244",
+    "name": "CD Leganés",
+    "league": "İspanya"
+  },
+  {
+    "id": "1387",
+    "name": "Siena FC",
+    "league": "İtalya"
+  },
+  {
+    "id": "1390",
+    "name": "Cagliari Calcio",
+    "league": "İtalya"
+  },
+  {
+    "id": "1416",
+    "name": "Amiens SC",
+    "league": "Fransa"
+  },
+  {
+    "id": "1420",
+    "name": "Angers Sporting Club de l'Ouest",
+    "league": "Fransa"
+  },
+  {
+    "id": "1421",
+    "name": "Stade Reims",
+    "league": "Fransa"
+  },
+  {
+    "id": "1423",
+    "name": "Valenciennes FC",
+    "league": "Fransa"
+  },
+  {
+    "id": "1429",
+    "name": "Cesena FC",
+    "league": "İtalya"
+  },
+  {
+    "id": "1467",
+    "name": "Göztepe Sportif Yatırımlar A.Ş.",
+    "league": "Türkiye"
+  },
+  {
+    "id": "1506",
+    "name": "Kardemir Karabükspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "1531",
+    "name": "Elche Club de Fútbol S.A.D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "1533",
+    "name": "SD Eibar",
+    "league": "İspanya"
+  },
+  {
+    "id": "1627",
+    "name": "Catania FC",
+    "league": "İtalya"
+  },
+  {
+    "id": "2036",
+    "name": "1. Fußballclub Heidenheim 1846",
+    "league": "Almanya"
+  },
+  {
+    "id": "2239",
+    "name": "Unione Sportiva Cremonese S.p.A.",
+    "league": "İtalya"
+  },
+  {
+    "id": "2288",
+    "name": "Swansea City",
+    "league": "İngiltere"
+  },
+  {
+    "id": "2292",
+    "name": "Elazigspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "2293",
+    "name": "Konyaspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "2323",
+    "name": "Orduspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "2375",
+    "name": "Altay SK",
+    "league": "Türkiye"
+  },
+  {
+    "id": "2381",
+    "name": "Sivasspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "2448",
+    "name": "Sporting Gijón",
+    "league": "İspanya"
+  },
+  {
+    "id": "2497",
+    "name": "Real Oviedo S.A.D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "2687",
+    "name": "Cádiz CF",
+    "league": "İspanya"
+  },
+  {
+    "id": "2722",
+    "name": "SPAL",
+    "league": "İtalya"
+  },
+  {
+    "id": "2832",
+    "name": "Gaziantep Futbol Kulübü A.Ş.",
+    "league": "Türkiye"
+  },
+  {
+    "id": "2919",
+    "name": "AC Monza",
+    "league": "İtalya"
+  },
+  {
+    "id": "2921",
+    "name": "Delfino Pescara 1936",
+    "league": "İtalya"
+  },
+  {
+    "id": "2944",
+    "name": "Ankaraspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "2969",
+    "name": "Dijon FCO",
+    "league": "Fransa"
+  },
+  {
+    "id": "3008",
+    "name": "Hull City",
+    "league": "İngiltere"
+  },
+  {
+    "id": "3205",
+    "name": "Kayserispor Kulübü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "3209",
+    "name": "Pendikspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "3216",
+    "name": "Mersin Talimyurdu SK",
+    "league": "Türkiye"
+  },
+  {
+    "id": "3302",
+    "name": "UD Almería",
+    "league": "İspanya"
+  },
+  {
+    "id": "3368",
+    "name": "Levante Unión Deportiva S.A.D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "3522",
+    "name": "Spezia Calcio",
+    "league": "İtalya"
+  },
+  {
+    "id": "3524",
+    "name": "Clermont Foot 63",
+    "league": "Fransa"
+  },
+  {
+    "id": "3558",
+    "name": "GFC Ajaccio",
+    "league": "Fransa"
+  },
+  {
+    "id": "3709",
+    "name": "Getafe Club de Fútbol S. A. D. Team Dubai",
+    "league": "İspanya"
+  },
+  {
+    "id": "3840",
+    "name": "Adana Demirspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "3911",
+    "name": "Stade brestois 29",
+    "league": "Fransa"
+  },
+  {
+    "id": "4083",
+    "name": "FC Crotone",
+    "league": "İtalya"
+  },
+  {
+    "id": "4102",
+    "name": "AC Carpi",
+    "league": "İtalya"
+  },
+  {
+    "id": "4171",
+    "name": "Benevento Calcio",
+    "league": "İtalya"
+  },
+  {
+    "id": "4172",
+    "name": "Pisa Sporting Club",
+    "league": "İtalya"
+  },
+  {
+    "id": "4795",
+    "name": "FC Ingolstadt 04",
+    "league": "Almanya"
+  },
+  {
+    "id": "5358",
+    "name": "SD Huesca",
+    "league": "İspanya"
+  },
+  {
+    "id": "6195",
+    "name": "Società Sportiva Calcio Napoli",
+    "league": "İtalya"
+  },
+  {
+    "id": "6574",
+    "name": "Unione Sportiva Sassuolo Calcio",
+    "league": "İtalya"
+  },
+  {
+    "id": "6646",
+    "name": "Fatih Karagümrük Sportif Faaliyetler San. Tic. A.Ş.",
+    "league": "Türkiye"
+  },
+  {
+    "id": "6890",
+    "name": "İstanbul Başakşehir Futbol Kulübü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "6894",
+    "name": "Kayseri Erciyesspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "7160",
+    "name": "Eyüp Spor Kulübü",
+    "league": "Türkiye"
+  },
+  {
+    "id": "7775",
+    "name": "Hatayspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "8970",
+    "name": "Frosinone Calcio",
+    "league": "İtalya"
+  },
+  {
+    "id": "10004",
+    "name": "Paris Football Club",
+    "league": "Fransa"
+  },
+  {
+    "id": "10484",
+    "name": "Kasımpaşa A.Ş.",
+    "league": "Türkiye"
+  },
+  {
+    "id": "11282",
+    "name": "Alanyaspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "11688",
+    "name": "Giresunspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "12321",
+    "name": "Girona Fútbol Club S. A. D.",
+    "league": "İspanya"
+  },
+  {
+    "id": "14171",
+    "name": "Thonon Évian Grand Genève FC",
+    "league": "Fransa"
+  },
+  {
+    "id": "16795",
+    "name": "Granada CF",
+    "league": "İspanya"
+  },
+  {
+    "id": "19771",
+    "name": "Akhisarspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "19789",
+    "name": "Yeni Malatyaspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "20698",
+    "name": "Balikesirspor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "23826",
+    "name": "RasenBallsport Leipzig",
+    "league": "Almanya"
+  },
+  {
+    "id": "24245",
+    "name": "Ümraniyespor",
+    "league": "Türkiye"
+  },
+  {
+    "id": "39722",
+    "name": "Erzurumspor FK",
+    "league": "Türkiye"
+  },
+  {
+    "id": "44006",
+    "name": "Bodrum FK",
+    "league": "Türkiye"
+  }
+]
